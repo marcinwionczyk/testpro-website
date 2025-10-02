@@ -1,24 +1,43 @@
 [package]
 name = "frontend"
-version = "0.2.0"
-authors = ["dxps <marius.ileana@gmail.com>"]
+version = "0.1.0"
+authors = ["Marcin Wionczyk <marcin.wionczyk@gmail.com>"]
 edition = "2021"
 
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
 [dependencies]
+dioxus = { version = "0.6.0", features = ["router"] }
+dioxus-web = "0.6"
+wasm-bindgen = "0.2"
+console_error_panic_hook = "0.1"
+wee_alloc = "0.4"
+web-sys = { version = "0.3", features = ["console", "Window", "Document", "Element", "HtmlElement"]}
+lucide-dioxus = {  version = "2.34.0", features = ["all-icons"] }
+accordion-rs = { version = "0.2.6", features = ["dio"] }
+tw_merge = { version = "0.1.6", features = ["variant"] }
+reqwest = { version = "0.12.23", features = ["json"] }
+serde = { version = "1.0.226", features = ["derive"] }
+dioxus-primitives = { git = "https://github.com/DioxusLabs/components", version = "0.0.1" }
+strum = { version = "0.27", features = ["derive"] }
+gloo = "0.11.0"
+json = "0.12.4"
 
-common_model = { path = "../common_model" }
 
-dioxus = "0.3.2"
-dioxus-web = { version = "0.3.2" }
-dioxus-router = { version = "0.3.0", features = [ "web" ] }
-dioxus-use-storage = "0.3.1"
+[features]
+default = ["web"]
+web = ["dioxus/web"]
+desktop = ["dioxus/desktop"]
+mobile = ["dioxus/mobile"]
 
-log = "0.4.17"
-sir = { version = "0.3.0", features = [ "dioxus" ] }
+[profile]
 
-wasm-logger = "0.2.0"
-console_error_panic_hook = "0.1.7"
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
 
-reqwest = { version="0.11.18", features = [ "blocking", "json" ] }
+[profile.server-dev]
+inherits = "dev"
 
-
+[profile.android-dev]
+inherits = "dev"

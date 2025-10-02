@@ -2,6 +2,18 @@
 members = [ "backend", "frontend", "common_model" ]
 resolver = "2"
 
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"
+
 # [patch.crates-io]
 # dioxus = { git = "https://github.com/DioxusLabs/dioxus.git" }
 # dioxus-web = { git = "https://github.com/DioxusLabs/dioxus.git" }

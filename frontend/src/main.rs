@@ -1,52 +1,52 @@
-#![allow(non_snake_case)]
+mod components;
 
-mod commons;
-mod comps;
-mod pages;
-
-use crate::commons::{AppState, TOKEN};
-use crate::comps::{Footer, Header};
-use crate::pages::{
-    ArticleAdd, HomePage, NotFoundPage, SettingsPage, SignInPage, SignOutPage, SignUpPage,
-};
 use dioxus::prelude::*;
-use dioxus_router::{Route, Router};
-use dioxus_use_storage::use_session_storage;
-use sir::{global_css, AppStyle};
+
+const FAVICON: Asset = asset!("/assets/favicon.ico");
+const MAIN_CSS: Asset = asset!("/assets/main.css");
+const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
+const DIOXUS_COMPONENTS_THEME: Asset = asset!("/assets/dx-components-theme.css");
+// Language context
+#[derive(Clone, Copy, strum::Display, strum::EnumIter, PartialEq)]
+pub enum Language {
+    #[strum(to_string = "EN")]
+    EN,
+    #[strum(to_string = "PL")]
+    PL,
+}
+
+impl Default for Language {
+    fn default() -> Self {
+        Language::PL
+    }
+}
+
 
 fn main() {
-    // Init debug tool for WebAssembly.
-    wasm_logger::init(wasm_logger::Config::default());
     console_error_panic_hook::set_once();
-
-    dioxus_web::launch(App);
+    launch(App);
 }
 
-fn App(cx: Scope) -> Element {
-    //
-    global_css!(" a:focus { outline: 0; } ");
-
-    let mut app_state = AppState::new();
-    if let Some(token) = use_session_storage(cx).get(TOKEN) {
-        app_state.token = Some(token);
-    }
-    use_shared_state_provider(cx, || app_state);
-
-    cx.render(rsx!(
-        AppStyle{ },
-        Router {
-            Header { }
-            Route { to: "/", HomePage {} }
-            Route { to: "/home", HomePage {} }
-            Route { to: "/signin", SignInPage {} }
-            Route { to: "/signout", SignOutPage {} }
-            Route { to: "/signup", SignUpPage {} }
-            Route { to: "/article_add", ArticleAdd {} }
-            Route { to: "/settings", SettingsPage {} }
-            // If the current location doesn't match any of
-            // the above routes, render the NotFoundPage component.
-            Route { to: "/?", NotFoundPage {} }
-            Footer{ }
+#[component]
+fn App() -> Element {
+    use_context_provider(|| Signal::new(Language::PL));
+    rsx! {
+        document::Link { rel: "icon", href: FAVICON }
+        document::Link { rel: "stylesheet", href: DIOXUS_COMPONENTS_THEME }
+        document::Link { rel: "stylesheet", href: MAIN_CSS }
+        document::Link { rel: "stylesheet", href: TAILWIND_CSS }
+        div { class: "min-h-screen",
+            components::Header {}
+            main {
+                components::Hero {}
+                components::Services {}
+                components::About {}
+                components::Blog {}
+                components::Contact {}
+            }
+            components::Footer {}
         }
-    ))
+    }
 }
+
+
